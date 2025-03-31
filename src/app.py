@@ -1,5 +1,5 @@
 from flask import Flask
-
+from flask_cors import CORS
 from config import config
 
 from database.db import get_connection
@@ -7,6 +7,7 @@ from database.db import get_connection
 from routes import Movie
 
 app = Flask(__name__)
+cors = CORS(app, resources={"*": {"origins": "htpps://localhost:4000"}})
 
 def page_not_found(error):
     return "<h1>Menu</h1>"
