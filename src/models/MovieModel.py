@@ -69,3 +69,36 @@ class MovieModel():
             return affected_rows  # Retorna la lista de películas
         except Exception as ex:
             raise Exception(ex)
+        
+# METODO PARA ACTUALIZAR DATOS CON UPDATE
+    @classmethod
+    def update_movie(self, movie):
+        try:  
+            conection = get_connection()  # Asegúrate de que la función get_connection esté bien definida
+            
+            with conection.cursor() as cursor:
+                cursor.execute("""UPDATE movie SET usuario = %s, correo = %s, contraseña = %s WHERE id = %s""", (movie.usuario, movie.correo, movie.contraseña, movie.id))
+            affected_rows = cursor.rowcount
+            conection.commit()
+            
+            conection.close()
+            return affected_rows  # Retorna la lista de películas
+        except Exception as ex:
+            raise Exception(ex)
+        
+
+# METODO PARA BORRAR DATOS 
+    @classmethod
+    def delete_movie(self, movie):
+        try:  
+            conection = get_connection()  # Asegúrate de que la función get_connection esté bien definida
+            
+            with conection.cursor() as cursor:
+                cursor.execute("DELETE FROM movie WHERE id = %s", (movie.id,))
+            affected_rows = cursor.rowcount
+            conection.commit()
+            
+            conection.close()
+            return affected_rows  # Retorna la lista de películas
+        except Exception as ex:
+            raise Exception(ex)

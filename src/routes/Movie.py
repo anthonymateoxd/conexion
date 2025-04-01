@@ -1,7 +1,11 @@
 from flask import Blueprint,jsonify, request
+import uuid
 
 #peticion get
 from models.MovieModel import MovieModel
+
+#Entities
+from models.entities.Movie import Movie
 
 main=Blueprint('movie_blueprint', __name__)
 
@@ -30,12 +34,55 @@ def get_movie(id_user):
 @main.route('/add', methods=['POST'])
 def add_movie(): 
     try:
-        print(request.json)
+    
         usuario = request.json['usuario']
         email = request.json['email']
         contraña = request.json['contraseña']
+        id = uuid.uuid4()
+        movie = movie = Movie(str(id),usuario, email, contraña)
+
+        affect_rows = MovieModel.add_movie(movie)
+
+        if affect_rows == 1:
+            return jsonify(movie.id), 201
+        else:
+            return jsonify({'message': 'Error on insert'}), 500
         
-        movie=Movie
+    except Exception as ex:
+        return jsonify({'message': str(ex)}), 500
+
+@main.route('/update/<id>', methods=['PUT'])
+def update_movie(id): 
+    try:
+    
+        usuario = request.json['usuario']
+        email = request.json['email']
+        contraña = request.json['contraseña']
+        id = uuid.uuid4()
+        movie = movie = Movie(str(id),usuario, email, contraña)
+
+        affect_rows = MovieModel.update_movie(movie)
+
+        if affect_rows == 1:
+            return jsonify(movie.id), 201
+        else:
+            return jsonify({'message': 'Error on insert'}), 500
+        
+    except Exception as ex:
+        return jsonify({'message': str(ex)}), 500
+
+
+
+@main.route('/delete/<id>', methods=['DELETE'])
+def delete_movie(id): 
+    try:
+        movie = Movie(id)
+        affect_rows = MovieModel.delete_movie(movie)
+
+        if affect_rows == 1:
+            return jsonify(movie.id), 201
+        else:
+            return jsonify({'message': 'No movie delete'}), 404
         
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
